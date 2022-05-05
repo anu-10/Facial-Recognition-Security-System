@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ControlPanel</class>
+ <widget class="QMainWindow" name="ControlPanel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1250</width>
+    <height>1050</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Control Panel</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>500</y>
+      <width>141</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>775</width>
+      <height>450</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="lineWidth">
+     <number>1</number>
+    </property>
+    <property name="midLineWidth">
+     <number>5</number>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>750</width>
+       <height>425</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Camera Switched Off</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>1160</x>
+      <y>20</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Log Out</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>790</x>
+      <y>50</y>
+      <width>450</width>
+      <height>930</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="midLineWidth">
+     <number>5</number>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frame_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>530</y>
+      <width>775</width>
+      <height>450</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
+    </property>
+    <property name="lineWidth">
+     <number>1</number>
+    </property>
+    <property name="midLineWidth">
+     <number>5</number>
+    </property>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>750</width>
+       <height>425</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Camera Switched Off</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>980</y>
+      <width>141</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1250</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuDatabase">
+    <property name="title">
+     <string>Database</string>
+    </property>
+    <widget class="QMenu" name="menuUser">
+     <property name="title">
+      <string>User</string>
+     </property>
+     <addaction name="actionAdd_User_2"/>
+     <addaction name="actionRemove_User_2"/>
+    </widget>
+    <addaction name="menuUser"/>
+    <addaction name="actionManage_Records"/>
+    <addaction name="actionAttendance"/>
+    <addaction name="actionView_Database"/>
+   </widget>
+   <addaction name="menuDatabase"/>
+  </widget>
+  <action name="actionAdd_User">
+   <property name="text">
+    <string>Add User</string>
+   </property>
+  </action>
+  <action name="actionRemove_User">
+   <property name="text">
+    <string>Remove User</string>
+   </property>
+  </action>
+  <action name="actionManage_Records">
+   <property name="text">
+    <string>Manage Records</string>
+   </property>
+  </action>
+  <action name="actionAdd_User_2">
+   <property name="text">
+    <string>Add User</string>
+   </property>
+  </action>
+  <action name="actionRemove_User_2">
+   <property name="text">
+    <string>Remove User</string>
+   </property>
+  </action>
+  <action name="actionAdd_Record">
+   <property name="text">
+    <string>Add Record</string>
+   </property>
+  </action>
+  <action name="actionRemove_Record">
+   <property name="text">
+    <string>Remove Record</string>
+   </property>
+  </action>
+  <action name="actionAttendance">
+   <property name="text">
+    <string>Attendance</string>
+   </property>
+  </action>
+  <action name="actionView_Database">
+   <property name="text">
+    <string>View Database</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
