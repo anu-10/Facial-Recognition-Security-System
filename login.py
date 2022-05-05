@@ -55,13 +55,22 @@ if __name__ == '__main__':
     """database.create_accounts(path)
     database.add_user(path, 'Anupam', '123')"""
     year = date.today().year
-    p = "Attendance\{}".format(year)
+    p = "Attendance\\"
+    l = "Logs\\"
     months = ['January','Feburary', 'March', 'April', 'May', 'June', 'July', 'August',\
                    'September', 'October', 'November', 'December']
     if not os.path.exists(p):
         os.mkdir(p)
+        p += str(year)
         for x in months:
             s = p + "\{}".format(x)
+            os.mkdir(s)
+    if not os.path.exists(l):
+        os.mkdir(l)
+        l += str(year)
+        os.mkdir(l)
+        for x in months:
+            s = l + "\{}".format(x)
             os.mkdir(s)
     app = qtw.QApplication(sys.argv+[QtCore.Qt.WindowStaysOnTopHint])
     w = MainWindow()

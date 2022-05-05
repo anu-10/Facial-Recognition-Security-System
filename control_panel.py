@@ -7,6 +7,8 @@ import threading
 import numpy as np 
 import user, login, record, attendance, view, database
 import warnings
+import pandas as pd
+from datetime import date, datetime
 warnings.filterwarnings("ignore")
 
 import cv2
@@ -35,12 +37,22 @@ class ControlPanel(QWidget):
         self.ui.pushButton.clicked.connect(self.controlTimer)
         self.ui.pushButton_2.clicked.connect(self.thread)
         self.ui.pushButton_3.clicked.connect(self.log_out)
+        self.ui.attendance.clicked.connect(self.generate_attendance)
         self.ui.actionAdd_User_2.triggered.connect(self.add_user)
         self.ui.actionRemove_User_2.triggered.connect(self.remove_user)
         self.ui.actionManage_Records.triggered.connect(self.manage_record)
         self.ui.actionAttendance.triggered.connect(self.view_attendance)
         self.ui.actionView_Database.triggered.connect(self.view_database)
         self.load_prereq()
+        self.id = 1
+        self.entry_dict = {}
+        self.exit_dict = {}
+        self.months = {1:'January', 2:'Feburary', 3:'March', 4:'April', 5:'May', 6:'June', 7:'July', 8:'August',\
+                       9:'September', 10:'October', 11:'November', 12: 'December'}
+        self.df = pd.DataFrame(columns=["ID","PRN", "TIMESTAMP","ACTION"])
+        self.df2 = pd.DataFrame(columns = ["PRN", "ATTENDANCE"])
+        self.log_path = "Logs\{}\{}\{}-{}-{}.xlsx".format(date.today().year,self.months[date.today().month],date.today().day, date.today().month, date.today().year)
+        self.attendance_path = "Attendance\{}\{}\{}-{}-{}.xlsx".format(date.today().year,self.months[date.today().month],date.today().day, date.today().month, date.today().year)
         self.center()
 
     def center(self):
@@ -86,7 +98,15 @@ class ControlPanel(QWidget):
         self.window = login.MainWindow()
         self.window.show()
         self.close()
-        
+    
+    def reset_elements(self):
+        self.id = 1
+        self.entry_dict = {}
+        self.exit_dict = {}
+    
+    def generate_attendance(self):
+        pass
+    
     def knn(self, train, test, k=5):
         def distance(v1, v2):
             # Eucledian 
@@ -172,7 +192,20 @@ class ControlPanel(QWidget):
                 
                 #Display on the screen the name and rectangle around it
                 pred_prn = self.prn[int(out)]
-                #pred_prn = 123
+                time = datetime.now()
+                current_time = time.strftime("%H:%M:%S")
+                new_row = {"ID":self.id, "PRN":pred_prn, "TIMESTAMP":current_time,"ACTION":'Entered'}
+                if pred_prn not in self.entry_dict:
+                    self.entry_dict[pred_prn] = 1
+                    self.df = self.df.append(new_row, ignore_index = True)
+                    self.id += 1
+                elif pred_prn in self.exit_dict:
+                    if self.entry_dict[pred_prn] <= self.exit_dict[pred_prn]:
+                        self.entry_dict[pred_prn] += 1
+                        self.df = self.df.append(new_row, ignore_index = True)
+                        self.id += 1
+                        
+                        
                 frame = cv2.putText(frame,pred_prn,(x,y-10),cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0),2,cv2.LINE_AA)
                 frame = cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,255),2)
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -194,6 +227,9 @@ class ControlPanel(QWidget):
             self.button_state = False
             self.ui.pushButton.setText("Start")
             self.ui.label.setText("Camera Switched Off")
+            print(self.entry_dict)
+            print(self.df)
+            self.df.to_excel(self.log_path, index = False)
             cv2.destroyAllWindows()
         
     def viewCam2(self):
@@ -233,7 +269,18 @@ class ControlPanel(QWidget):
     
                     #Display on the screen the name and rectangle around it
                     pred_prn = self.prn[int(out)]
-                    
+                    time = datetime.now()
+                    current_time = time.strftime("%H:%M:%S")
+                    new_row = {"ID":self.id, "PRN":pred_prn, "TIMESTAMP":current_time,"ACTION":'Exited'}
+                    if pred_prn not in self.exit_dict:
+                        self.exit_dict[pred_prn] = 1
+                        self.df = self.df.append(new_row, ignore_index = True)
+                        self.id += 1
+                    elif pred_prn in self.entry_dict:
+                        if self.exit_dict[pred_prn] <= self.entry_dict[pred_prn]:
+                            self.exit_dict[pred_prn] += 1
+                            self.df = self.df.append(new_row, ignore_index = True)
+                            self.id += 1
                     frame = cv2.putText(frame,pred_prn,(x,y-10),cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0),2,cv2.LINE_AA)
                     frame = cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,255),2)
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

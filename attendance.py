@@ -26,12 +26,12 @@ class Attendance(QWidget):
     def show_attendance(self, date):
         self.ui.listWidget.clear()
         self.ui.label.setText("No Record Selected")
-        path = "Attendance\{}\{}\{}-{}-{}.xlsx".format(date.year(),self.months[date.month()],date.day(), date.month(), date.year())
-        if not os.path.exists(path):
+        log_path = "Logs\{}\{}\{}-{}-{}.xlsx".format(date.year(),self.months[date.month()],date.day(), date.month(), date.year())
+        if not os.path.exists(log_path):
             QtWidgets.QMessageBox.information(self, "ERROR", "No Record Created!")
             return
-        record = pd.read_excel(path)
-        x = QtWidgets.QListWidgetItem("Attendance for {}/{}/{}".format(date.day(), date.month(), date.year()))
+        record = pd.read_excel(log_path)
+        x = QtWidgets.QListWidgetItem("Logs for {}/{}/{}".format(date.day(), date.month(), date.year()))
         x.setTextAlignment(Qt.AlignCenter)
         self.ui.listWidget.addItem(x)
         self.ui.listWidget.addItem("ID\tPRN\t\tTimestamp\t\tAction")
