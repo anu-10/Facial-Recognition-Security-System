@@ -4,6 +4,7 @@ from PyQt5 import uic, QtWidgets, QtCore
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QImage, QPixmap
 import cv2
+import numpy as np
 
 class ManageRecord(QWidget):
     def __init__(self, icon, username, path, db_path):
@@ -46,14 +47,13 @@ class ManageRecord(QWidget):
             self.reset_add()
             return
         prn = int(prn)
-        v = database.add_to_main(self.path, prn, name)
+        v = database.add_to_main(self.db_path, prn, name)
         if not v:
             QtWidgets.QMessageBox.information(self, "ERROR", "Record already exists in Database!")
             self.reset_add()
         else:
             QtWidgets.QMessageBox.information(self, "SUCCESS", "Record added to Database!")
             self.reset_add()
-        self.ui.start.text("Start")
     
     def reset_add(self):
         self.ui.start.setText("Start")
@@ -67,15 +67,18 @@ class ManageRecord(QWidget):
             QtWidgets.QMessageBox.about(self, "ERROR", "One or more fields is Empty!")
             return
         prn = int(prn)
-        v = database.user_exists(self.path, self.username, password)
+        v = database.user_exists(self.db_path, self.username, password)
         if not v:
             QtWidgets.QMessageBox.information(self, "ERROR", "Password is incorrect!")
         else:
-            v = database.remove_from_main(self.path, prn)
+            v = database.remove_from_main(self.db_path, prn)
             if not v:
                 QtWidgets.QMessageBox.information(self, "ERROR", "Record does not exist in Database!")
                 self.reset_remove()
             else:
+                file_path = self.path + "\data\\" + str(prn) + ".npy"
+                if os.path.exists(file_path):
+                    os.remove(file_path)
                 QtWidgets.QMessageBox.information(self, "SUCCESS", "Record removed from Database!")
                 self.reset_remove()
     
@@ -84,27 +87,92 @@ class ManageRecord(QWidget):
         self.ui.password.setText("")
         
     def startRecord(self):
-        ret, image = self.cap.read()
+        """ret, image = self.cap.read()
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image = cv2.resize(image, (700,600))
         height, width, channel = image.shape
         step = channel * width
         qImg = QImage(image.data, width, height, step, QImage.Format_RGB888)
-        self.ui.label.setPixmap(QPixmap.fromImage(qImg))
+        self.ui.label.setPixmap(QPixmap.fromImage(qImg))"""
+        data_path = self.path + "\data\\"
+        file_path = self.path + "\data\\" + self.ui.prn.text() + ".npy"
+        face_cascade = cv2.CascadeClassifier(r"C:\Programming\Application\haarcascade_frontalface_alt.xml")
+        if os.path.exists(file_path):
+            QtWidgets.QMessageBox.information(self, "ERROR", "Face Data Already Exists!")
+            self.timer.stop()
+            self.cap.release()
+            self.ui.start.setText("Start")
+            self.ui.label.setText("Camera Switched Off")
+            self.reset_add()
+            cv2.destroyAllWindows()
+            return
+        skip = 0
+        face_data = []
+
+        while True:
+
+            if skip / 10 == 40:
+                break
+            
+            ret, frame = self.cap.read()
+            if ret == False:
+                continue
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            
+            faces = face_cascade.detectMultiScale(frame, 1.3, 4)
+            faces = sorted(faces, key = lambda f:f[2]*f[3], reverse = True)
+            
+            for (x, y, w, h) in faces:
+                frame = cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3)
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            frame = cv2.resize(frame, (700,600))
+            height, width, channel = frame.shape
+            step = channel * width
+            qImg = QImage(frame.data, width, height, step, QImage.Format_RGB888)
+            self.ui.label.setPixmap(QPixmap.fromImage(qImg))
+            
+            try:
+                l = faces[0]
+                x, y, w, h = l
+                offset = 10
+                face_section = frame[y-offset:y+h+offset, x-offset:x+w+offset]
+                face_section = cv2.resize(face_section, (100, 100))
+                
+                skip += 1
+                if skip%10 ==0:
+                    face_data.append(face_section)
+                    print(skip/10)
+                
+            except:
+                a=0
+            finally:
+                
+                # cv2.imshow("bw", gray)
+                key = cv2.waitKey(1) & 0xFF
+                if key == ord('e'):
+                    break
+
+        face_data=np.asarray(face_data)
+        face_data = face_data.reshape((face_data.shape[0], -1))
+        np.save(data_path + self.ui.prn.text() +'.npy', face_data)
+        QtWidgets.QMessageBox.about(self, "SUCCESS", "Face Data Captured!")
+        self.add_record()
+        self.timer.stop()
+        self.cap.release()
+        self.ui.start.setText("Start")
+        self.ui.label.setText("Camera Switched Off")
+        self.reset_add()
 
     # start/stop timer
     def controlTimer(self):
         if not self.timer.isActive():
-            text = self.ui.start.text()
-            if text != "Add":
-                self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-                self.timer.start(10)
-                self.ui.start.setText("Stop")
-            else:
-                self.add_record()
+            self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+            self.timer.start(10)
+            self.ui.start.setText("Stop")
+                
         else:
             self.timer.stop()
             self.cap.release()
-            self.ui.start.setText("Add")
+            self.ui.start.setText("Start")
             self.ui.label.setText("Camera Switched Off")
             cv2.destroyAllWindows()
