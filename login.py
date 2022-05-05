@@ -6,8 +6,9 @@ Created on Tue Apr  5 10:06:02 2022
 """
 import os
 from datetime import date
-os.chdir('C:\Programming\Application')
-path = 'C:\Programming\Application\Database\data.db'
+path = 'C:\Programming\Application'
+db_path = 'C:\Programming\Application\Database\data.db'
+os.chdir(path)
 
 import sys
 from PyQt5 import QtWidgets
@@ -33,9 +34,9 @@ class MainWindow(qtw.QWidget):
     def login(self):
         self.username = self.ui.username.text()
         password = self.ui.password.text()
-        result = database.user_exists(path, self.username, password)
+        result = database.user_exists(db_path, self.username, password)
         if result:
-            self.window = cp.ControlPanel(self.icon,self. username)
+            self.window = cp.ControlPanel(self.icon,self. username, path, db_path)
             self.window.show()
             self.close()
         else:

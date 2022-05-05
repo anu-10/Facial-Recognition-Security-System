@@ -1,16 +1,18 @@
 import os
-os.chdir('C:\Programming\Application')
-path = 'C:\Programming\Application\Database\data.db'
 import database
 from PyQt5 import uic, QtWidgets, QtCore
 from PyQt5.QtWidgets import QWidget
 
-Ui_Create, baseClass = uic.loadUiType('UI/create_user.ui')
-Ui_Remove, baseClass = uic.loadUiType('UI/remove_user.ui')
+
+
 
 class CreateUser(QWidget):
-    def __init__(self, icon, username):
+    def __init__(self, icon, username, path, db_path):
         super().__init__()
+        self.path = path
+        self.db_path = db_path
+        os.chdir(self.path)
+        Ui_Create, baseClass = uic.loadUiType('UI/create_user.ui')
         self.ui = Ui_Create()
         self.ui.setupUi(self)
         self.setFixedSize(640, 500)
@@ -28,8 +30,8 @@ class CreateUser(QWidget):
         if name == "" or new_pass == "" or curr_pass == "":
             QtWidgets.QMessageBox.about(self, "ERROR", "One or more fields is Empty!")
             return
-        if database.user_exists(path, self.username, curr_pass):
-            if(database.add_user(path, name, new_pass)):
+        if database.user_exists(self.path, self.username, curr_pass):
+            if(database.add_user(self.path, name, new_pass)):
                 QtWidgets.QMessageBox.about(self, "SUCCESS", "User created successfully!")
                 self.reset()
             else:
@@ -47,8 +49,12 @@ class CreateUser(QWidget):
             self.create()
     
 class RemoveUser(QWidget):
-    def __init__(self, icon, username):
+    def __init__(self, icon, username, path, db_path):
         super().__init__()
+        self.path = path
+        self.db_path = db_path
+        os.chdir(self.path)
+        Ui_Remove, baseClass = uic.loadUiType('UI/remove_user.ui')
         self.ui = Ui_Remove()
         self.ui.setupUi(self)
         self.setFixedSize(640, 430)
@@ -68,8 +74,8 @@ class RemoveUser(QWidget):
         if self.username == name:
             QtWidgets.QMessageBox.about(self, "ERROR", "Cannot remove current user!")
             return
-        if database.user_exists(path, self.username, pwd):
-            res = database.remove_user(path, name)
+        if database.user_exists(self.path, self.username, pwd):
+            res = database.remove_user(self.path, name)
             if res == 1:
                 QtWidgets.QMessageBox.about(self, "SUCCESS", "User removed successfully!")
                 self.reset()

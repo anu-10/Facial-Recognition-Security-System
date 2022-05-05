@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1250</width>
+    <width>800</width>
     <height>1050</height>
    </rect>
   </property>
@@ -68,7 +68,7 @@
    <widget class="QPushButton" name="pushButton_3">
     <property name="geometry">
      <rect>
-      <x>1160</x>
+      <x>700</x>
       <y>20</y>
       <width>75</width>
       <height>23</height>
@@ -76,25 +76,6 @@
     </property>
     <property name="text">
      <string>Log Out</string>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="listWidget">
-    <property name="geometry">
-     <rect>
-      <x>790</x>
-      <y>50</y>
-      <width>450</width>
-      <height>930</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Plain</enum>
-    </property>
-    <property name="midLineWidth">
-     <number>5</number>
     </property>
    </widget>
    <widget class="QFrame" name="frame_2">
@@ -155,7 +136,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1250</width>
+     <width>800</width>
      <height>21</height>
     </rect>
    </property>

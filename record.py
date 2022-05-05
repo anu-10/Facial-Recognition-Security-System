@@ -1,17 +1,17 @@
 import os
-os.chdir('C:\Programming\Application')
-path = 'C:\Programming\Application\Database\data.db'
 import database
 from PyQt5 import uic, QtWidgets, QtCore
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QImage, QPixmap
 import cv2
 
-Ui_Manage, baseClass = uic.loadUiType('UI/manage_record.ui')
-
 class ManageRecord(QWidget):
-    def __init__(self, icon, username):
+    def __init__(self, icon, username, path, db_path):
         super().__init__()
+        self.path = path
+        self.db_path = db_path
+        os.chdir(self.path)
+        Ui_Manage, baseClass = uic.loadUiType('UI/manage_record.ui')
         self.ui = Ui_Manage()
         self.ui.setupUi(self)
         self.setFixedSize(1200, 800)
@@ -46,7 +46,7 @@ class ManageRecord(QWidget):
             self.reset_add()
             return
         prn = int(prn)
-        v = database.add_to_main(path, prn, name)
+        v = database.add_to_main(self.path, prn, name)
         if not v:
             QtWidgets.QMessageBox.information(self, "ERROR", "Record already exists in Database!")
             self.reset_add()
@@ -67,11 +67,11 @@ class ManageRecord(QWidget):
             QtWidgets.QMessageBox.about(self, "ERROR", "One or more fields is Empty!")
             return
         prn = int(prn)
-        v = database.user_exists(path, self.username, password)
+        v = database.user_exists(self.path, self.username, password)
         if not v:
             QtWidgets.QMessageBox.information(self, "ERROR", "Password is incorrect!")
         else:
-            v = database.remove_from_main(path, prn)
+            v = database.remove_from_main(self.path, prn)
             if not v:
                 QtWidgets.QMessageBox.information(self, "ERROR", "Record does not exist in Database!")
                 self.reset_remove()

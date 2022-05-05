@@ -1,17 +1,19 @@
 import os
-os.chdir('C:\Programming\Application')
-path = 'C:\Programming\Application\Database\data.db'
 import database
 from PyQt5 import uic, QtWidgets, QtCore
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtCore import *
 import pandas as pd
 
-Ui_Attendance, baseClass = uic.loadUiType('UI/attendance.ui')
+
 
 class Attendance(QWidget):
-    def __init__(self, icon):
+    def __init__(self, icon, path, db_path):
         super().__init__()
+        self.path = path
+        self.db_path = db_path
+        os.chdir(self.path)
+        Ui_Attendance, baseClass = uic.loadUiType('UI/attendance.ui')
         self.ui = Ui_Attendance()
         self.ui.setupUi(self)
         self.setFixedSize(900, 800)
