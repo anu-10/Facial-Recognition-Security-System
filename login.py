@@ -6,8 +6,8 @@ Created on Tue Apr  5 10:06:02 2022
 """
 import os
 from datetime import date
-path = r'C:\Users\archi\Desktop\Facial-Recognition-Security-System'
-db_path = r'C:\Users\archi\Desktop\Facial-Recognition-Security-System\Database\data.db'
+path = r'C:\Programming\Application'
+db_path = path + r'\Database\data.db'
 os.chdir(path)
 
 import sys

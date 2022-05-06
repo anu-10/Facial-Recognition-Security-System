@@ -30,8 +30,8 @@ class CreateUser(QWidget):
         if name == "" or new_pass == "" or curr_pass == "":
             QtWidgets.QMessageBox.about(self, "ERROR", "One or more fields is Empty!")
             return
-        if database.user_exists(self.path, self.username, curr_pass):
-            if(database.add_user(self.path, name, new_pass)):
+        if database.user_exists(self.db_path, self.username, curr_pass):
+            if(database.add_user(self.db_path, name, new_pass)):
                 QtWidgets.QMessageBox.about(self, "SUCCESS", "User created successfully!")
                 self.reset()
             else:
@@ -74,8 +74,8 @@ class RemoveUser(QWidget):
         if self.username == name:
             QtWidgets.QMessageBox.about(self, "ERROR", "Cannot remove current user!")
             return
-        if database.user_exists(self.path, self.username, pwd):
-            res = database.remove_user(self.path, name)
+        if database.user_exists(self.db_path, self.username, pwd):
+            res = database.remove_user(self.db_path, name)
             if res == 1:
                 QtWidgets.QMessageBox.about(self, "SUCCESS", "User removed successfully!")
                 self.reset()

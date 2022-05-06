@@ -239,40 +239,44 @@ class ControlPanel(QWidget):
                 continue
 
             faces = self.face_cascade.detectMultiScale(frame,1.3,5)
-            if(len(faces)!=0):
-                for face in faces:
-                    x,y,w,h = face
-    
-                    #Get the face ROI
-                    offset = 10
-                    face_section = frame[y-offset:y+h+offset,x-offset:x+w+offset]
-                    face_section = cv2.resize(face_section,(100,100))
-    
-                    #Predicted Label (out)
-                    out = self.knn(self.trainset,face_section.flatten())
-    
-                    #Display on the screen the name and rectangle around it
-                    pred_prn = self.prn[int(out)]
-                    time = datetime.now()
-                    current_time = time.strftime("%H:%M:%S")
-                    new_row = {"ID":self.id, "PRN":pred_prn, "TIMESTAMP":current_time,"ACTION":'Exited'}
-                    if pred_prn not in self.exit_dict:
-                        self.exit_dict[pred_prn] = 1
-                        self.df = self.df.append(new_row, ignore_index = True)
-                        self.id += 1
-                    elif pred_prn in self.entry_dict:
-                        if self.exit_dict[pred_prn] <= self.entry_dict[pred_prn]:
-                            self.exit_dict[pred_prn] += 1
+            try:
+                if(len(faces)!=0):
+                    for face in faces:
+                        x,y,w,h = face
+        
+                        #Get the face ROI
+                        offset = 10
+                        face_section = frame[y-offset:y+h+offset,x-offset:x+w+offset]
+                        face_section = cv2.resize(face_section,(100,100))
+        
+                        #Predicted Label (out)
+                        out = self.knn(self.trainset,face_section.flatten())
+        
+                        #Display on the screen the name and rectangle around it
+                        pred_prn = self.prn[int(out)]
+                        time = datetime.now()
+                        current_time = time.strftime("%H:%M:%S")
+                        new_row = {"ID":self.id, "PRN":pred_prn, "TIMESTAMP":current_time,"ACTION":'Exited'}
+                        if pred_prn not in self.exit_dict:
+                            self.exit_dict[pred_prn] = 1
                             self.df = self.df.append(new_row, ignore_index = True)
                             self.id += 1
-                    frame = cv2.putText(frame,pred_prn,(x,y-10),cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0),2,cv2.LINE_AA)
-                    frame = cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,255),2)
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            frame = cv2.resize(frame, (750,750))
-            height, width, channel = frame.shape
-            step = channel * width
-            qImg = QImage(frame.data, width, height, step, QImage.Format_RGB888)
-            self.ui.label_2.setPixmap(QPixmap.fromImage(qImg))
+                        elif pred_prn in self.entry_dict:
+                            if self.exit_dict[pred_prn] <= self.entry_dict[pred_prn]:
+                                self.exit_dict[pred_prn] += 1
+                                self.df = self.df.append(new_row, ignore_index = True)
+                                self.id += 1
+                        frame = cv2.putText(frame,pred_prn,(x,y-10),cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0),2,cv2.LINE_AA)
+                        frame = cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,255),2)
+            except:
+                pass
+            finally:
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                frame = cv2.resize(frame, (750,750))
+                height, width, channel = frame.shape
+                step = channel * width
+                qImg = QImage(frame.data, width, height, step, QImage.Format_RGB888)
+                self.ui.label_2.setPixmap(QPixmap.fromImage(qImg))
         self.ui.label_2.setText("Camera Switched Off")
         
         
