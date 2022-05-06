@@ -90,7 +90,7 @@ class ManageRecord(QWidget):
         
         data_path = self.path + "\data\\"
         file_path = self.path + "\data\\" + self.ui.prn.text() + ".npy"
-        face_cascade = cv2.CascadeClassifier(r"C:\Programming\Application\haarcascade_frontalface_alt.xml")
+        face_cascade = cv2.CascadeClassifier(self.path + "\haarcascade_frontalface_alt.xml")
         if os.path.exists(file_path):
             QtWidgets.QMessageBox.information(self, "ERROR", "Face Data Already Exists!")
             self.timer.stop()

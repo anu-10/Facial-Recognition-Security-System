@@ -129,7 +129,7 @@ class ControlPanel(QWidget):
         return output[0][index]
     
     def load_prereq(self):
-        self.face_cascade = cv2.CascadeClassifier(r"C:\Programming\Application\haarcascade_frontalface_alt.xml")
+        self.face_cascade = cv2.CascadeClassifier(self.path + "\haarcascade_frontalface_alt.xml")
         skip = 0
         dataset_path = './data/'
 
@@ -168,7 +168,8 @@ class ControlPanel(QWidget):
 
         ret, frame = self.cap.read()
         faces = self.face_cascade.detectMultiScale(frame,1.3,5)
-        if(len(faces)!=0):
+
+        try:
             for face in faces:
                 x,y,w,h = face
         
@@ -198,12 +199,15 @@ class ControlPanel(QWidget):
                         
                 frame = cv2.putText(frame,pred_prn,(x,y-10),cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0),2,cv2.LINE_AA)
                 frame = cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,255),2)
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame = cv2.resize(frame, (750,750))
-        height, width, channel = frame.shape
-        step = channel * width
-        qImg = QImage(frame.data, width, height, step, QImage.Format_RGB888)
-        self.ui.label.setPixmap(QPixmap.fromImage(qImg))
+        except:
+            pass
+        finally:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            frame = cv2.resize(frame, (750,750))
+            height, width, channel = frame.shape
+            step = channel * width
+            qImg = QImage(frame.data, width, height, step, QImage.Format_RGB888)
+            self.ui.label.setPixmap(QPixmap.fromImage(qImg))
         
     def controlTimer(self):
         if not self.timer.isActive():

@@ -47,12 +47,12 @@ class Attendance(QWidget):
         for i in range(len(record)):
             item = list(record.iloc[i])
             prn = int(item[1])
-            time = item[2]
+            time = item[2].split(":")
             action = item[3]
-            if action == 'Entered':
-                d[prn] = "Entered"
-            elif action == 'Exited' and time.hour < 9:
+            if action == 'Exited':
                 d[prn] = "Exited"
+            elif action == 'Entered' and int(time[0]) < 9:
+                d[prn] = "Entered"
             self.ui.listWidget.addItem("{}  {}\t\t{}\t\t{}".format(item[0], item[1], item[2], item[3]))
         x = QtWidgets.QListWidgetItem("Attendance for {}/{}/{}".format(date.day(), date.month(), date.year()))
         x.setTextAlignment(Qt.AlignCenter)
