@@ -87,13 +87,7 @@ class ManageRecord(QWidget):
         self.ui.password.setText("")
         
     def startRecord(self):
-        """ret, image = self.cap.read()
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        image = cv2.resize(image, (700,600))
-        height, width, channel = image.shape
-        step = channel * width
-        qImg = QImage(image.data, width, height, step, QImage.Format_RGB888)
-        self.ui.label.setPixmap(QPixmap.fromImage(qImg))"""
+        
         data_path = self.path + "\data\\"
         file_path = self.path + "\data\\" + self.ui.prn.text() + ".npy"
         face_cascade = cv2.CascadeClassifier(r"C:\Programming\Application\haarcascade_frontalface_alt.xml")

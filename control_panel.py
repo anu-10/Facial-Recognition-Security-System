@@ -37,7 +37,6 @@ class ControlPanel(QWidget):
         self.ui.pushButton.clicked.connect(self.controlTimer)
         self.ui.pushButton_2.clicked.connect(self.thread)
         self.ui.pushButton_3.clicked.connect(self.log_out)
-        self.ui.attendance.clicked.connect(self.generate_attendance)
         self.ui.actionAdd_User_2.triggered.connect(self.add_user)
         self.ui.actionRemove_User_2.triggered.connect(self.remove_user)
         self.ui.actionManage_Records.triggered.connect(self.manage_record)
@@ -104,8 +103,6 @@ class ControlPanel(QWidget):
         self.entry_dict = {}
         self.exit_dict = {}
     
-    def generate_attendance(self):
-        pass
     
     def knn(self, train, test, k=5):
         def distance(v1, v2):
@@ -168,13 +165,6 @@ class ControlPanel(QWidget):
     
         
     def viewCam(self):
-        """ret, image = self.cap.read()
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        image = cv2.resize(image, (750,425))
-        height, width, channel = image.shape
-        step = channel * width
-        qImg = QImage(image.data, width, height, step, QImage.Format_RGB888)
-        self.ui.label.setPixmap(QPixmap.fromImage(qImg))"""
 
         ret, frame = self.cap.read()
         faces = self.face_cascade.detectMultiScale(frame,1.3,5)
@@ -235,16 +225,6 @@ class ControlPanel(QWidget):
     def viewCam2(self):
         url = 'http://192.168.1.36:8080/video'
         self.cap_2 = cv2.VideoCapture(url)
-        """while(not self.button2_state):
-            ret, frame = self.cap_2.read()
-            if frame is not None:
-                image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                image = cv2.resize(image, (750,425))
-                height, width, channel = image.shape
-                step = channel * width
-                qImg = QImage(image.data, width, height, step, QImage.Format_RGB888)
-                self.ui.label_2.setPixmap(QPixmap.fromImage(qImg))
-        self.ui.label_2.setText("Camera Switched Off")"""
         # Testing 
         count = 0
         final_prn = []

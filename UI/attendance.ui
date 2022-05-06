@@ -28,51 +28,20 @@
     <rect>
      <x>10</x>
      <y>280</y>
-     <width>600</width>
+     <width>425</width>
      <height>511</height>
     </rect>
    </property>
   </widget>
-  <widget class="QFrame" name="frame">
+  <widget class="QListWidget" name="listWidget_2">
    <property name="geometry">
     <rect>
-     <x>629</x>
-     <y>279</y>
-     <width>261</width>
+     <x>460</x>
+     <y>280</y>
+     <width>425</width>
      <height>511</height>
     </rect>
    </property>
-   <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Sunken</enum>
-   </property>
-   <property name="lineWidth">
-    <number>1</number>
-   </property>
-   <property name="midLineWidth">
-    <number>1</number>
-   </property>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>241</width>
-      <height>491</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>No Record Selected</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignHCenter|Qt::AlignTop</set>
-    </property>
-   </widget>
   </widget>
  </widget>
  <resources/>
