@@ -280,6 +280,9 @@ class ControlPanel(QWidget):
             self.t.start()
         else:
             self.button2_state = True
+            print(self.exit_dict)
+            print(self.df)
+            self.df.to_excel(self.log_path, index = False)
             self.ui.pushButton_2.setText("Start")
             self.ui.label_2.setText("Camera Switched Off")
             cv2.destroyAllWindows()
